@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Charlie Shirley Art</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --off-white: #F7F5F1;
+      --ink: #1A1714;
+      --warm-mid: #8C8279;
+      --rule: #D9D4CC;
+      --accent: #B5854A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--off-white);
+      color: var(--ink);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: var(--ink);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.18s ease, width 0.25s ease, height 0.25s ease, opacity 0.2s ease;
+      opacity: 0.5;
+    }
+    body:hover .cursor { opacity: 1; }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 48px;
+      background: var(--off-white);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+    nav.scrolled { border-color: var(--rule); }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--warm-mid);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 88px;
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 64px 80px 80px;
+      animation: fadeUp 1s ease forwards;
+      opacity: 0;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 5.5vw, 6rem);
+      font-weight: 300;
+      line-height: 1.05;
+      margin-bottom: 32px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .hero-sub {
+      font-size: 0.9rem;
+      color: var(--warm-mid);
+      line-height: 1.8;
+      max-width: 340px;
+      margin-bottom: 48px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 36px;
+      background: var(--ink);
+      color: var(--off-white);
+      text-decoration: none;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    .btn-primary:hover { background: var(--accent); }
+
+    .btn-ghost {
+      display: inline-block;
+      text-decoration: none;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm-mid);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
+
+    .hero-image {
+      position: relative;
+      background: var(--rule);
+      overflow: hidden;
+      animation: fadeIn 1.4s ease forwards;
+      opacity: 0;
+    }
+
+    .hero-image-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: var(--warm-mid);
+    }
+
+    .placeholder-frame {
+      width: 180px;
+      height: 220px;
+      border: 1px solid var(--warm-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.4;
+    }
+
+    .placeholder-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    /* Marquee strip */
+    .strip {
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 14px 0;
+      background: var(--off-white);
+    }
+
+    .strip-inner {
+      display: inline-flex;
+      animation: marquee 24s linear infinite;
+      gap: 0;
+    }
+
+    .strip-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 28px;
+      padding: 0 40px;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm-mid);
+    }
+
+    .strip-dot {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* Gallery section */
+    .section {
+      padding: 100px 80px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 56px;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+    }
+
+    .section-link {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm-mid);
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+    .section-link:hover { color: var(--ink); }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 16px;
+    }
+
+    .gallery-item {
+      background: var(--rule);
+      overflow: hidden;
+      position: relative;
+      cursor: none;
+    }
+
+    .gallery-item:first-child {
+      grid-row: 1 / 3;
+      aspect-ratio: 3/4;
+    }
+
+    .gallery-item:not(:first-child) {
+      aspect-ratio: 4/3;
+    }
+
+    .gallery-item-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      opacity: 0.45;
+    }
+
+    .gallery-placeholder-icon {
+      width: 60px; height: 72px;
+      border: 1px solid var(--warm-mid);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--ink);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+    }
+
+    .gallery-item:hover .gallery-overlay { opacity: 0.75; }
+
+    .gallery-caption {
+      color: var(--off-white);
+      transform: translateY(8px);
+      transition: transform 0.3s ease;
+    }
+    .gallery-item:hover .gallery-caption { transform: translateY(0); }
+
+    .gallery-caption-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+    }
+
+    .gallery-caption-meta {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    .gallery-placeholder-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm-mid);
+    }
+
+    /* Merch section */
+    .merch-section {
+      padding: 100px 80px;
+      background: var(--ink);
+      color: var(--off-white);
+    }
+
+    .merch-section .section-header { border-bottom-color: rgba(255,255,255,0.12); }
+    .merch-section .section-title { color: var(--off-white); }
+    .merch-section .section-link { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.2); }
+    .merch-section .section-link:hover { color: var(--off-white); border-color: var(--off-white); }
+
+    .merch-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .merch-card {
+      position: relative;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .merch-card:hover { border-color: var(--accent); }
+
+    .merch-card-img {
+      aspect-ratio: 1/1;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .merch-card-img svg { opacity: 0.2; }
+
+    .merch-card-info {
+      padding: 20px 24px 24px;
+    }
+
+    .merch-card-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .merch-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 300;
+      margin-bottom: 6px;
+    }
+
+    .merch-card-price {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.05em;
+    }
+
+    .merch-badge {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: var(--accent);
+      color: white;
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+    }
+
+    /* About section */
+    .about-section {
+      padding: 100px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-image {
+      aspect-ratio: 3/4;
+      background: var(--rule);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-image-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      opacity: 0.4;
+      color: var(--warm-mid);
+    }
+
+    .about-image-frame {
+      width: 100px; height: 130px;
+      border: 1px solid var(--warm-mid);
+    }
+
+    .about-image-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .about-content {}
+
+    .about-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+
+    .about-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 28px;
+    }
+
+    .about-heading em { font-style: italic; }
+
+    .about-body {
+      font-size: 0.9rem;
+      color: var(--warm-mid);
+      line-height: 1.9;
+      margin-bottom: 20px;
+    }
+
+    .about-sig {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.6rem;
+      color: var(--ink);
+      margin-top: 36px;
+    }
+
+    /* Instagram strip */
+    .instagram-section {
+      padding: 80px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .instagram-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 40px;
+    }
+
+    .instagram-cell {
+      aspect-ratio: 1/1;
+      background: var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      transition: opacity 0.2s;
+    }
+
+    .instagram-cell:hover { opacity: 0.8; }
+
+    .instagram-icon { opacity: 0.25; }
+
+    .instagram-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+
+    .instagram-handle {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--warm-mid);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 40px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--warm-mid);
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--ink); }
+
+    .footer-copy {
+      font-size: 0.65rem;
+      color: var(--warm-mid);
+      letter-spacing: 0.05em;
+    }
+
+    /* Coming soon overlay */
+    .coming-soon-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--ink);
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeOut 0.8s ease 2.2s forwards;
+      pointer-events: none;
+    }
+
+    .coming-soon-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 6vw, 5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--off-white);
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: textReveal 0.9s ease 0.4s forwards;
+    }
+
+    /* Keyframes */
+    @keyframes fadeOut {
+      to { opacity: 0; }
+    }
+
+    @keyframes textReveal {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-text { padding: 40px 24px; }
+      .hero-image { height: 60vw; }
+      .section { padding: 60px 24px; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item:first-child { grid-row: auto; grid-column: 1 / -1; aspect-ratio: 16/9; }
+      .merch-section { padding: 60px 24px; }
+      .merch-grid { grid-template-columns: 1fr 1fr; }
+      .about-section { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+      .instagram-section { padding: 60px 24px; }
+      .instagram-grid { grid-template-columns: repeat(3, 1fr); }
+      .instagram-cell:nth-child(n+4) { display: none; }
+      footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 24px; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+      body { cursor: auto; }
+      .cursor, .cursor-ring { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Intro overlay -->
+  <div class="coming-soon-overlay">
+    <div class="coming-soon-text">Charlie Shirley Art</div>
+  </div>
+
+  <!-- Nav -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">Charlie Shirley Art</a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Painting &amp; Original Works</div>
+      <h1 class="hero-title"><em>Portraits</em><br />of the<br />Interior.</h1>
+      <p class="hero-sub">Original paintings and limited apparel. The work deals in what's underneath — hands, thought, the stuff that doesn't have words yet.</p>
+      <div class="hero-actions">
+        <a href="#shop" class="btn-primary">Shop the Collection</a>
+        <a href="#work" class="btn-ghost">View Work</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="hero-image-placeholder">
+        <div class="placeholder-frame">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <path d="M8 32L16 20L22 27L28 18L32 32H8Z" stroke="#8C8279" stroke-width="1" fill="none"/>
+            <circle cx="13" cy="14" r="3" stroke="#8C8279" stroke-width="1" fill="none"/>
+          </svg>
+        </div>
+        <span class="placeholder-label">Featured Work — Add Image</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Marquee strip -->
+  <div class="strip">
+    <div class="strip-inner">
+      <!-- repeated for seamless loop -->
+      <span class="strip-item">Original Paintings <span class="strip-dot"></span></span>
+      <span class="strip-item">Portraits of the Interior <span class="strip-dot"></span></span>
+      <span class="strip-item">Reno, NV <span class="strip-dot"></span></span>
+      <span class="strip-item">Studying in the UK, 2025 <span class="strip-dot"></span></span>
+      <span class="strip-item">Traditional Media <span class="strip-dot"></span></span>
+      <span class="strip-item">charlieshirleyart.com <span class="strip-dot"></span></span>
+      <span class="strip-item">Original Paintings <span class="strip-dot"></span></span>
+      <span class="strip-item">Portraits of the Interior <span class="strip-dot"></span></span>
+      <span class="strip-item">Reno, NV <span class="strip-dot"></span></span>
+      <span class="strip-item">Studying in the UK, 2025 <span class="strip-dot"></span></span>
+      <span class="strip-item">Traditional Media <span class="strip-dot"></span></span>
+      <span class="strip-item">charlieshirleyart.com <span class="strip-dot"></span></span>
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <section class="section" id="work">
+    <div class="section-header">
+      <h2 class="section-title">Selected Works</h2>
+      <a href="#" class="section-link">View All →</a>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <div class="gallery-item-inner">
+          <div class="gallery-placeholder-icon"></div>
+          <span class="gallery-placeholder-label">Painting — Large Format</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-caption">
+            <div class="gallery-caption-title">Untitled No. 1</div>
+            <div class="gallery-caption-meta">Oil on canvas · 2025</div>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-item-inner">
+          <div class="gallery-placeholder-icon"></div>
+          <span class="gallery-placeholder-label">Add Work</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-caption">
+            <div class="gallery-caption-title">Untitled No. 2</div>
+            <div class="gallery-caption-meta">Acrylic · 2025</div>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-item-inner">
+          <div class="gallery-placeholder-icon"></div>
+          <span class="gallery-placeholder-label">Add Work</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-caption">
+            <div class="gallery-caption-title">Untitled No. 3</div>
+            <div class="gallery-caption-meta">Mixed media · 2025</div>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-item-inner">
+          <div class="gallery-placeholder-icon"></div>
+          <span class="gallery-placeholder-label">Add Work</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-caption">
+            <div class="gallery-caption-title">Untitled No. 4</div>
+            <div class="gallery-caption-meta">Oil on panel · 2025</div>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-item-inner">
+          <div class="gallery-placeholder-icon"></div>
+          <span class="gallery-placeholder-label">Add Work</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-caption">
+            <div class="gallery-caption-title">Untitled No. 5</div>
+            <div class="gallery-caption-meta">Watercolour · 2024</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Shop / Merch -->
+  <section class="merch-section" id="shop">
+    <div class="section-header">
+      <h2 class="section-title">The Shop</h2>
+      <a href="#" class="section-link">All Products →</a>
+    </div>
+    <div class="merch-grid">
+      <div class="merch-card">
+        <div class="merch-badge">New</div>
+        <div class="merch-card-img">
+          <!-- t-shirt icon -->
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <path d="M16 20L28 14H52L64 20L54 28V66H26V28L16 20Z" stroke="white" stroke-width="1.5" fill="none"/>
+            <path d="M28 14C28 14 30 22 40 22C50 22 52 14 52 14" stroke="white" stroke-width="1.5" fill="none"/>
+          </svg>
+        </div>
+        <div class="merch-card-info">
+          <div class="merch-card-label">Apparel</div>
+          <div class="merch-card-title">Artist Tee — Vol. 1</div>
+          <div class="merch-card-price">$38 — Coming Soon</div>
+        </div>
+      </div>
+      <div class="merch-card">
+        <div class="merch-card-img">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <rect x="18" y="16" width="44" height="52" stroke="white" stroke-width="1.5" fill="none"/>
+            <path d="M28 36L36 28L44 36L52 24" stroke="white" stroke-width="1.5" fill="none"/>
+            <circle cx="30" cy="27" r="3" stroke="white" stroke-width="1.2" fill="none"/>
+          </svg>
+        </div>
+        <div class="merch-card-info">
+          <div class="merch-card-label">Original Work</div>
+          <div class="merch-card-title">Enquire — Original Paintings</div>
+          <div class="merch-card-price">Price on request</div>
+        </div>
+      </div>
+      <div class="merch-card">
+        <div class="merch-card-img">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+            <path d="M20 20L28 12H52L60 20L52 26V68H28V26L20 20Z" stroke="white" stroke-width="1.5" fill="none"/>
+            <path d="M28 12C28 12 31 24 40 24C49 24 52 12 52 12" stroke="white" stroke-width="1.5" fill="none"/>
+          </svg>
+        </div>
+        <div class="merch-card-info">
+          <div class="merch-card-label">Apparel</div>
+          <div class="merch-card-title">Heavyweight Hoodie</div>
+          <div class="merch-card-price">$72 — Coming Soon</div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top: 40px; font-size: 0.8rem; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; text-align: center;">Full shop launching soon. Follow <a href="https://www.instagram.com/charlieshirleyart" target="_blank" style="color: var(--accent); text-decoration: none;">@charlieshirleyart</a> for updates.</p>
+  </section>
+
+  <!-- About -->
+  <section class="about-section" id="about">
+    <div class="about-image">
+      <div class="about-image-placeholder">
+        <div class="about-image-frame"></div>
+        <span class="about-image-label">Photo of Charlie</span>
+      </div>
+    </div>
+    <div class="about-content">
+      <div class="about-eyebrow">About the Artist</div>
+      <h2 class="about-heading">The work<br /><em>goes inward.</em></h2>
+      <p class="about-body">I'm Charlie — a painter from Reno, Nevada, heading to art school in the UK in September 2025. I work in traditional media: oils, acrylics, whatever the subject demands.</p>
+      <p class="about-body">Most of my work starts with the body — hands especially. What they hold, what they reveal, what they're trying to say when words aren't enough. It tends to go to dark places. I think that's where the honest stuff lives.</p>
+      <p class="about-body">This site funds the move and the work that comes next. If something here resonates, reach out — I'd rather talk about the painting than sell it in silence.</p>
+      <div class="about-sig">— Charlie</div>
+      <div style="margin-top: 28px;">
+        <a href="mailto:inquiry@charlieshirleyart.com" style="font-size: 0.72rem; letter-spacing: 0.14em; color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 2px;">inquiry@charlieshirleyart.com</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instagram grid -->
+  <section class="instagram-section" id="contact">
+    <div class="instagram-header">
+      <h2 class="section-title" style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 2rem;">Follow Along</h2>
+      <a href="https://www.instagram.com/charlieshirleyart" target="_blank" class="instagram-handle" style="text-decoration: none; color: var(--warm-mid); transition: color 0.2s;">@charlieshirleyart</a>
+    </div>
+    <div class="instagram-grid">
+      <div class="instagram-cell">
+        <svg class="instagram-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8C8279" stroke-width="1.2">
+          <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="#8C8279"/>
+        </svg>
+      </div>
+      <div class="instagram-cell"></div>
+      <div class="instagram-cell"></div>
+      <div class="instagram-cell"></div>
+      <div class="instagram-cell"></div>
+    </div>
+    <div style="margin-top: 36px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+      <a href="https://www.instagram.com/charlieshirleyart" target="_blank" class="btn-primary" style="display: inline-block;">Follow on Instagram</a>
+      <a href="mailto:inquiry@charlieshirleyart.com" style="font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-mid); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 2px; transition: color 0.2s;">inquiry@charlieshirleyart.com</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-logo">Charlie Shirley Art</div>
+    <ul class="footer-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="https://www.instagram.com/charlieshirleyart" target="_blank">Instagram</a></li>
+      <li><a href="mailto:inquiry@charlieshirleyart.com">Contact</a></li>
+    </ul>
+    <div class="footer-copy">&copy; 2025 Charlie Shirley Art</div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let rx = 0, ry = 0, mx = 0, my = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+    function animRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    }
+    animRing();
+
+    // Hover state on links/buttons
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.style.width = '14px'; cursor.style.height = '14px'; ring.style.width = '52px'; ring.style.height = '52px'; });
+      el.addEventListener('mouseleave', () => { cursor.style.width = '8px'; cursor.style.height = '8px'; ring.style.width = '36px'; ring.style.height = '36px'; });
+    });
+
+    // Nav scroll state
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+  </script>
+</body>
+</html>
