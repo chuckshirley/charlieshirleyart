@@ -89,6 +89,25 @@
 
     nav { display: flex; }
 
+    .ig-link {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 0.6rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; margin-left: 32px;
+      transition: color 0.2s;
+    }
+    .ig-link:hover { color: var(--ink); }
+    .ig-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .tt-link {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 0.6rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; margin-left: 20px;
+      transition: color 0.2s;
+    }
+    .tt-link:hover { color: var(--ink); }
+    .tt-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+
     .tab-btn {
       background: none; border: none;
       border-bottom: 2px solid transparent;
@@ -320,9 +339,10 @@
     .gallery-detail-close:hover { color: var(--ink); }
 
     .gallery-detail-series {
-      font-size: 0.58rem; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--tan);
-      margin-bottom: 18px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 400;
+      letter-spacing: 0.06em; color: var(--tan);
+      margin-bottom: 6px;
     }
 
     .gallery-detail-title {
@@ -348,6 +368,35 @@
     }
     .gallery-detail-value {
       font-size: 0.8rem; color: var(--muted);
+    }
+
+    /* ─── Gallery purchase ─── */
+    .gallery-detail-purchase {
+      margin-top: 32px;
+    }
+    .gallery-detail-buy {
+      display: inline-block;
+      padding: 12px 28px;
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .gallery-detail-buy:hover {
+      background: var(--tan);
+      color: var(--paper);
+    }
+    .gallery-detail-sold {
+      display: inline-block;
+      padding: 12px 28px;
+      border: 1px solid var(--tan-light);
+      color: var(--tan-light);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
     }
 
     /* ─── Commission ─── */
@@ -451,6 +500,20 @@
       <button class="tab-btn" data-tab="work">Available Work</button>
       <button class="tab-btn" data-tab="commission">Commission</button>
     </nav>
+    <a class="ig-link" href="https://instagram.com/charlieshirleyart" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+      </svg>
+      @charlieshirleyart
+    </a>
+    <a class="tt-link" href="https://tiktok.com/@charlieshirleyart" target="_blank" rel="noopener" aria-label="TikTok">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.79 1.53V6.79a4.85 4.85 0 0 1-1.02-.1z"/>
+      </svg>
+      @charlieshirleyart
+    </a>
   </header>
 
   <div class="tab-content">
@@ -618,7 +681,6 @@
               <label>Budget Range</label>
               <select name="budget">
                 <option value="">Select a range</option>
-                <option>Under $500</option>
                 <option>$500 – $1,000</option>
                 <option>$1,000 – $2,500</option>
                 <option>$2,500+</option>
@@ -630,7 +692,6 @@
               <select name="timeframe">
                 <option value="">Select a timeframe</option>
                 <option>Flexible</option>
-                <option>Within 3 months</option>
                 <option>Within 6 months</option>
                 <option>Specific date</option>
               </select>
@@ -730,11 +791,10 @@
       seriesHeader.className = 'series-detail-header-row';
       document.getElementById('detail-meta').insertAdjacentElement('afterend', seriesHeader);
     }
-    seriesHeader.innerHTML = `
-      <a class="series-detail-enquire"
-         href="mailto:inquiry@charlieshirleyart.com?subject=Enquiry — ${s.name.replace(/<[^>]+>/g,'')}">
-        Enquire
-      </a>`;
+    const seriesPrice = '$' + s.price.toLocaleString();
+    seriesHeader.innerHTML = s.sold
+      ? `<div class="gallery-detail-sold">Sold</div>`
+      : `<a class="gallery-detail-buy" href="https://paypal.me/${PAYPAL_ME}/${s.price}" target="_blank" rel="noopener">Purchase Series · ${seriesPrice}</a>`;
 
     const grid = document.getElementById('detail-works');
     grid.innerHTML = s.works.map(w => `
@@ -763,22 +823,25 @@
   // ─── Gallery detail ────────────────────────────────────────────
   // Replace placeholders with real titles, series, medium, dimensions, year.
   // Update title, series, medium, dimensions, and year for each painting below.
+  // PAYPAL: replace YOUR_PAYPAL_ME with Charlie's paypal.me username (e.g. charlieshirleyart)
+  const PAYPAL_ME = 'YOUR_PAYPAL_ME';
+
   const galleryData = [
-    { src: 'painting-1.jpg', title: '<em>"Reflection in the Glass"</em>', series: 'Series I', medium: 'Oil on Canvas', dimensions: '24 × 30 in', year: '2025' },
-    { src: 'painting-2.jpg', title: '<em>"Smells Like an Ego Death and Old Spice Fiji"</em>', series: 'Series I', medium: 'Oil on Canvas', dimensions: '18 × 24 in', year: '2025' },
-    { src: 'painting-3.jpg', title: '<em>"Internal Rationalization"</em>', series: 'Series I', medium: 'Oil on Canvas', dimensions: '24 × 30 in', year: '2024' },
-    { src: 'painting-4.jpg', title: '<em>"A Dime a Dozen"</em>', series: 'Series I', medium: 'Oil on Canvas', dimensions: '16 × 20 in', year: '2024' },
-    { src: 'painting-5.jpg', title: '<em>"Classrooms Skeleton"</em>', series: 'Series II', medium: 'Oil on Panel', dimensions: '12 × 16 in', year: '2025' },
-    { src: 'painting-6.jpg', title: '<em>"V2 (Wabi-Sabi)"</em>', series: 'Series II', medium: 'Oil on Panel', dimensions: '12 × 16 in', year: '2025' },
-    { src: 'painting-7.jpg', title: '<em>Untitled No. 3</em>', series: 'Series II', medium: 'Oil on Panel', dimensions: '18 × 24 in', year: '2025' },
-    { src: 'painting-8.jpg', title: '<em>Untitled No. 1</em>', series: 'Series III', medium: 'Mixed Media', dimensions: '20 × 20 in', year: '2024' },
-      { src: 'painting-9.jpg', title: '<em>Untitled No. 2</em>', series: 'Series III', medium: 'Oil on Canvas', dimensions: '36 × 24 in', year: '2024' },
-      { src: 'painting-10.jpg', title: '<em>Untitled No. 3</em>', series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
-      { src: 'painting-11.jpg', title: '<em>Untitled No. 4</em>', series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
-      { src: 'painting-12.jpg', title: '<em>Untitled No. 5</em>', series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
-      { src: 'painting-13.jpg', title: '<em>Untitled No. 6</em>', series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
-      { src: 'painting-14.jpg', title: '<em>Untitled No. 7</em>', series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
-      { src: 'painting-15.jpg', title: '<em>Untitled No. 8</em>', series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
+    { src: 'painting-1.jpg',  title: '<em>"Reflection in the Glass"</em>',                         series: 'Series I',   medium: 'Oil on Canvas', dimensions: '24 × 30 in', year: '2025' },
+    { src: 'painting-2.jpg',  title: '<em>"Smells Like an Ego Death and Old Spice Fiji"</em>',      series: 'Series I',   medium: 'Oil on Canvas', dimensions: '18 × 24 in', year: '2025' },
+    { src: 'painting-3.jpg',  title: '<em>"Internal Rationalization"</em>',                         series: 'Series I',   medium: 'Oil on Canvas', dimensions: '24 × 30 in', year: '2024' },
+    { src: 'painting-4.jpg',  title: '<em>"A Dime a Dozen"</em>',                                   series: 'Series I',   medium: 'Oil on Canvas', dimensions: '16 × 20 in', year: '2024' },
+    { src: 'painting-5.jpg',  title: '<em>"Classrooms Skeleton"</em>',                              series: 'Series II',  medium: 'Oil on Panel',  dimensions: '12 × 16 in', year: '2025' },
+    { src: 'painting-6.jpg',  title: '<em>"V2 (Wabi-Sabi)"</em>',                                  series: 'Series II',  medium: 'Oil on Panel',  dimensions: '12 × 16 in', year: '2025' },
+    { src: 'painting-7.jpg',  title: '<em>Untitled No. 3</em>',                                     series: 'Series II',  medium: 'Oil on Panel',  dimensions: '18 × 24 in', year: '2025' },
+    { src: 'painting-8.jpg',  title: '<em>Untitled No. 1</em>',                                     series: 'Series III', medium: 'Mixed Media',   dimensions: '20 × 20 in', year: '2024' },
+    { src: 'painting-9.jpg',  title: '<em>Untitled No. 2</em>',                                     series: 'Series III', medium: 'Oil on Canvas', dimensions: '36 × 24 in', year: '2024' },
+    { src: 'painting-10.jpg', title: '<em>Untitled No. 3</em>',                                     series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
+    { src: 'painting-11.jpg', title: '<em>Untitled No. 4</em>',                                     series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
+    { src: 'painting-12.jpg', title: '<em>Untitled No. 5</em>',                                     series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
+    { src: 'painting-13.jpg', title: '<em>Untitled No. 6</em>',                                     series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
+    { src: 'painting-14.jpg', title: '<em>Untitled No. 7</em>',                                     series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
+    { src: 'painting-15.jpg', title: '<em>Untitled No. 8</em>',                                     series: 'Series III', medium: 'Oil on Canvas', dimensions: '20 × 20 in', year: '2024' },
   ];
 
   function openGalleryDetail(index) {
